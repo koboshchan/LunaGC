@@ -174,6 +174,8 @@ public final class DungeonSystem extends BaseGameSystem {
             player.getTeamManager().checkCurrentAvatarIsAlive(null);
         }
         player.getTowerManager().clearEntry();
+        //Fix the issue where players cannot exit the dungeon
+        if (dungeonManager != null) {
         dungeonManager.setTowerDungeon(false);
 
         // Transfer player back to world after a small delay.
