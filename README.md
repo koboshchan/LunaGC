@@ -97,6 +97,82 @@ Output JAR can be found in the project root folder.
 ./gradlew generateHandbook
 ```
 
+---
+
+## Connecting to Your Game
+
+### Step 1: Create a Server Account
+
+Before logging in, create an account using the server console:
+
+- **If using Docker**:
+  ```bash
+  docker attach lunagc-server
+  ```
+- Type the command:
+  ```text
+  account create <username> <uid>
+  ```
+  *Example:* `account create player1 10001`
+- **Detach safely**: Press `Ctrl + P`, then `Ctrl + Q`.
+
+---
+
+### Step 2: Patch the Game Client
+
+1. Open your game directory: `<GameFolder>/GenshinImpact_Data/Plugins/`
+2. Back up the original `Astrolabe.dll`.
+3. Copy and replace it with `patch/Astrolabe.dll` from this repository.
+
+---
+
+### Step 3: Redirect Game Traffic to Your Server
+
+Redirect client dispatch requests to your server (`http://127.0.0.1:8088`):
+
+#### Option A: Using a Launcher (Recommended)
+1. Open any Grasscutter-compatible launcher (e.g. Cultivation, Yuki, or GC-Launcher).
+2. Set the Server Address to:
+   ```text
+   http://127.0.0.1:8088
+   ```
+   *(If playing from another device on your LAN, replace `127.0.0.1` with your server host's local IP)*.
+3. Click **Launch Game**.
+
+#### Option B: Using Fiddler Classic
+1. In Fiddler, go to **Tools** > **Options** > **HTTPS** and enable **Decrypt HTTPS traffic**.
+2. Go to **Rules** > **Customize Rules...** and paste inside `OnBeforeRequest`:
+   ```javascript
+   if (oS.host.EndsWith(".yuanshen.com") || oS.host.EndsWith(".hoyoverse.com") || oS.host.EndsWith(".mihoyo.com")) {
+       if (!oS.host.Contains("autopatchcn") && !oS.host.Contains("autopatchos")) {
+           oS.host = "127.0.0.1:8088";
+           oS.fullUrl = oS.fullUrl.Replace("https://", "http://");
+       }
+   }
+   ```
+3. Keep Fiddler running in the background and start the game.
+
+---
+
+### Step 4: Login & Play
+
+1. At the in-game login screen:
+   - **Username**: The `<username>` you created in Step 1 (e.g. `player1`).
+   - **Password**: Any password.
+2. Click **Login** and enter the world!
+
+---
+
+## Web GM Handbook & In-Game Commands
+
+- **Web GM Panel**: Open **[http://localhost:8080/handbook](http://localhost:8080/handbook)** in your browser to give items, grant avatars, teleport, or spawn monsters with a single click.
+- **In-Game Chat Commands**:
+  - `/give 201 16000` — Add 16,000 Primogems
+  - `/give 223 100` — Add 100 Intertwined Fates
+  - `/heal` — Restore party HP & Energy
+  - `/prop godmode on` — Invincibility
+  - `/prop unlockmap 1` — Unlock all waypoints & map areas
+
 ## Troubleshooting
 
 - Make sure to set useEncryption and useInRouting both to false otherwise you might encounter errors.
