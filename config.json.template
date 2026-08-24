@@ -107,7 +107,7 @@
           "leyLines": 1.0
         },
         "handbook": {
-          "enable": false,
+          "enable": true,
           "allowCommands": true,
           "limits": {
             "enabled": false,
@@ -118,7 +118,7 @@
           "server": {
             "enforced": false,
             "address": "127.0.0.1",
-            "port": 443,
+            "port": 8088,
             "canChange": true
           }
         }

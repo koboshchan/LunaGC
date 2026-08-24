@@ -35,7 +35,8 @@ services:
       # Change ACCESS_ADDRESS to your public or LAN IP if clients connect remotely
       - ACCESS_ADDRESS=127.0.0.1
     ports:
-      - "8088:8088/tcp"     # HTTP Dispatch / SDK Server
+      - "8080:8088/tcp"     # Web GUI / HTTP Server (8080)
+      - "8088:8088/tcp"     # HTTP Dispatch / SDK Server (8088)
       - "22101:22101/udp"   # Game Server KCP Protocol
       - "22101:22101/tcp"   # Game Server TCP Protocol
     volumes:

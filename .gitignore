@@ -63,10 +63,10 @@ tmp/
 
 /*.jar
 /*.sh
-!entrypoint.sh
+!docker-entrypoint.sh
+!src/main/resources/html/handbook.html
 
 GM Handbook*.txt
-handbook.html
 
 config.json
 mitmdump.exe

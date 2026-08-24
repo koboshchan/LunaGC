@@ -1,0 +1,642 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LunaGC - Web GM Handbook</title>
+    <style>
+        :root {
+            --bg-primary: #0f172a;
+            --bg-secondary: #1e293b;
+            --bg-card: #283548;
+            --accent: #38bdf8;
+            --accent-hover: #0ea5e9;
+            --accent-purple: #a855f7;
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --border: #334155;
+            --success: #22c55e;
+            --error: #ef4444;
+            --warning: #f59e0b;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-primary);
+            color: var(--text-main);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        header {
+            background-color: var(--bg-secondary);
+            border-bottom: 1px solid var(--border);
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .brand h1 {
+            font-size: 1.35rem;
+            background: linear-gradient(135deg, var(--accent), var(--accent-purple));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-weight: 700;
+        }
+
+        .badge {
+            background: rgba(56, 189, 248, 0.15);
+            color: var(--accent);
+            padding: 0.25rem 0.6rem;
+            border-radius: 9999px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            border: 1px solid rgba(56, 189, 248, 0.3);
+        }
+
+        .session-info {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            font-size: 0.875rem;
+        }
+
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background-color: var(--error);
+            display: inline-block;
+        }
+        .status-dot.connected {
+            background-color: var(--success);
+            box-shadow: 0 0 8px var(--success);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 1.5rem auto;
+            padding: 0 1.5rem;
+            width: 100%;
+            flex: 1;
+        }
+
+        .auth-bar {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 1.25rem;
+            margin-bottom: 1.5rem;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .auth-inputs {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.75rem;
+            align-items: center;
+        }
+
+        .input-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.35rem;
+        }
+
+        .input-group label {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        input, select {
+            background-color: var(--bg-card);
+            border: 1px solid var(--border);
+            color: var(--text-main);
+            padding: 0.5rem 0.85rem;
+            border-radius: 8px;
+            font-size: 0.875rem;
+            outline: none;
+            transition: all 0.2s ease;
+        }
+
+        input:focus, select:focus {
+            border-color: var(--accent);
+            box-shadow: 0 0 0 2px rgba(56, 189, 248, 0.2);
+        }
+
+        button {
+            background: linear-gradient(135deg, var(--accent), #2563eb);
+            color: #fff;
+            border: none;
+            padding: 0.55rem 1.2rem;
+            border-radius: 8px;
+            font-size: 0.875rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        button:hover {
+            opacity: 0.9;
+            transform: translateY(-1px);
+        }
+
+        button.btn-secondary {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            color: var(--text-main);
+        }
+
+        button.btn-secondary:hover {
+            background: var(--border);
+        }
+
+        .tabs {
+            display: flex;
+            gap: 0.5rem;
+            border-bottom: 1px solid var(--border);
+            margin-bottom: 1.5rem;
+            overflow-x: auto;
+        }
+
+        .tab-btn {
+            background: none;
+            border: none;
+            border-bottom: 2px solid transparent;
+            border-radius: 0;
+            color: var(--text-muted);
+            padding: 0.75rem 1.25rem;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .tab-btn.active {
+            color: var(--accent);
+            border-bottom-color: var(--accent);
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .card {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 1.5rem;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .card-header h2 {
+            font-size: 1.15rem;
+            font-weight: 600;
+        }
+
+        .quick-picks {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.4rem;
+            margin-top: 0.5rem;
+        }
+
+        .quick-pick-btn {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            font-size: 0.75rem;
+            padding: 0.25rem 0.6rem;
+            border-radius: 6px;
+            cursor: pointer;
+            color: var(--text-muted);
+        }
+
+        .quick-pick-btn:hover {
+            color: var(--accent);
+            border-color: var(--accent);
+        }
+
+        .notification {
+            position: fixed;
+            bottom: 1.5rem;
+            right: 1.5rem;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-left: 4px solid var(--accent);
+            padding: 1rem 1.5rem;
+            border-radius: 8px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+            display: none;
+            animation: slideIn 0.2s ease;
+            z-index: 999;
+            max-width: 400px;
+        }
+
+        @keyframes slideIn {
+            from { transform: translateX(100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+
+        footer {
+            text-align: center;
+            padding: 1.5rem;
+            color: var(--text-muted);
+            font-size: 0.8rem;
+            border-top: 1px solid var(--border);
+            margin-top: 2rem;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="brand">
+            <h1>LunaGC GM Handbook</h1>
+            <span class="badge">Web Control Panel</span>
+        </div>
+        <div class="session-info">
+            <span><span id="statusDot" class="status-dot"></span> <span id="statusText">Disconnected</span></span>
+            <span id="playerBadge" style="display:none;" class="badge">UID: <b id="displayUid"></b></span>
+        </div>
+    </header>
+
+    <div class="container">
+        <!-- Session Configuration -->
+        <div class="auth-bar">
+            <div class="auth-inputs">
+                <div class="input-group">
+                    <label>Player UID</label>
+                    <input id="playerUid" type="text" placeholder="e.g. 10001" style="width: 130px;">
+                </div>
+                <div class="input-group">
+                    <label>Session Token</label>
+                    <input id="playerToken" type="text" placeholder="In-game session token" style="width: 220px;">
+                </div>
+                <button id="btnSaveAuth" onclick="saveAuth()">Connect Player</button>
+                <button class="btn-secondary" onclick="openAuthWindow()">Get In-game Auth</button>
+            </div>
+            <div>
+                <a href="/documentation" style="color: var(--accent); font-size: 0.875rem; text-decoration: none;">API Documentation &rarr;</a>
+            </div>
+        </div>
+
+        <!-- Navigation Tabs -->
+        <div class="tabs">
+            <button class="tab-btn active" onclick="switchTab('itemsTab', this)">Items & Currency</button>
+            <button class="tab-btn" onclick="switchTab('avatarsTab', this)">Avatars & Talents</button>
+            <button class="tab-btn" onclick="switchTab('spawnTab', this)">Spawn Entities</button>
+            <button class="tab-btn" onclick="switchTab('teleportTab', this)">Teleport</button>
+            <button class="tab-btn" onclick="switchTab('commandsTab', this)">Command Helper</button>
+        </div>
+
+        <!-- Tab 1: Items -->
+        <div id="itemsTab" class="tab-content active">
+            <div class="grid">
+                <div class="card">
+                    <div class="card-header">
+                        <h2>Give Item</h2>
+                    </div>
+                    <div class="input-group">
+                        <label>Item ID</label>
+                        <input id="itemId" type="number" placeholder="e.g. 201">
+                    </div>
+                    <div class="quick-picks">
+                        <span class="quick-pick-btn" onclick="setItem(201, 16000)">Primogems (x16000)</span>
+                        <span class="quick-pick-btn" onclick="setItem(223, 100)">Intertwined Fate (x100)</span>
+                        <span class="quick-pick-btn" onclick="setItem(224, 100)">Acquaint Fate (x100)</span>
+                        <span class="quick-pick-btn" onclick="setItem(202, 10000000)">Mora (x10M)</span>
+                        <span class="quick-pick-btn" onclick="setItem(104003, 1000)">Hero's Wit (x1000)</span>
+                        <span class="quick-pick-btn" onclick="setItem(107011, 500)">Fragile Resin (x500)</span>
+                    </div>
+                    <div class="input-group">
+                        <label>Amount</label>
+                        <input id="itemAmount" type="number" value="1">
+                    </div>
+                    <button onclick="giveItem()">Give Item</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tab 2: Avatars -->
+        <div id="avatarsTab" class="tab-content">
+            <div class="grid">
+                <div class="card">
+                    <div class="card-header">
+                        <h2>Grant Avatar</h2>
+                    </div>
+                    <div class="input-group">
+                        <label>Avatar ID</label>
+                        <input id="avatarId" type="number" placeholder="e.g. 10000052 (Raiden Shogun)">
+                    </div>
+                    <div class="quick-picks">
+                        <span class="quick-pick-btn" onclick="setAvatar(10000052)">Raiden Shogun (10000052)</span>
+                        <span class="quick-pick-btn" onclick="setAvatar(10000073)">Nahida (10000073)</span>
+                        <span class="quick-pick-btn" onclick="setAvatar(10000089)">Furina (10000089)</span>
+                        <span class="quick-pick-btn" onclick="setAvatar(10000087)">Neuvillette (10000087)</span>
+                        <span class="quick-pick-btn" onclick="setAvatar(10000096)">Arlecchino (10000096)</span>
+                        <span class="quick-pick-btn" onclick="setAvatar(10000093)">Xianyun (10000093)</span>
+                        <span class="quick-pick-btn" onclick="setAvatar(10000091)">Navia (10000091)</span>
+                        <span class="quick-pick-btn" onclick="setAvatar(10000070)">Nilou (10000070)</span>
+                    </div>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 0.75rem;">
+                        <div class="input-group">
+                            <label>Level</label>
+                            <input id="avatarLevel" type="number" value="90" min="1" max="90">
+                        </div>
+                        <div class="input-group">
+                            <label>Constellations</label>
+                            <input id="avatarConst" type="number" value="6" min="0" max="6">
+                        </div>
+                        <div class="input-group">
+                            <label>Talents</label>
+                            <input id="avatarTalent" type="number" value="10" min="1" max="15">
+                        </div>
+                    </div>
+                    <button onclick="grantAvatar()">Grant Avatar</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tab 3: Spawns -->
+        <div id="spawnTab" class="tab-content">
+            <div class="grid">
+                <div class="card">
+                    <div class="card-header">
+                        <h2>Spawn Monster / Entity</h2>
+                    </div>
+                    <div class="input-group">
+                        <label>Entity ID</label>
+                        <input id="entityId" type="number" placeholder="e.g. 20010101">
+                    </div>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem;">
+                        <div class="input-group">
+                            <label>Amount</label>
+                            <input id="spawnAmount" type="number" value="1" min="1" max="50">
+                        </div>
+                        <div class="input-group">
+                            <label>Level</label>
+                            <input id="spawnLevel" type="number" value="90" min="1" max="200">
+                        </div>
+                    </div>
+                    <button onclick="spawnEntity()">Spawn Entity</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tab 4: Teleport -->
+        <div id="teleportTab" class="tab-content">
+            <div class="grid">
+                <div class="card">
+                    <div class="card-header">
+                        <h2>Teleport to Scene</h2>
+                    </div>
+                    <div class="input-group">
+                        <label>Scene ID</label>
+                        <input id="sceneId" type="number" placeholder="3 (Teyvat Overworld)">
+                    </div>
+                    <div class="quick-picks">
+                        <span class="quick-pick-btn" onclick="setScene(3)">Teyvat Overworld (3)</span>
+                        <span class="quick-pick-btn" onclick="setScene(9)">Serenitea Pot (9)</span>
+                        <span class="quick-pick-btn" onclick="setScene(5)">Enkanomiya (5)</span>
+                        <span class="quick-pick-btn" onclick="setScene(6)">Chasm Underground (6)</span>
+                        <span class="quick-pick-btn" onclick="setScene(7)">Sea of Bygone Eras (7)</span>
+                    </div>
+                    <button onclick="teleportTo()">Teleport</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tab 5: Command Helper -->
+        <div id="commandsTab" class="tab-content">
+            <div class="card">
+                <div class="card-header">
+                    <h2>Common In-Game / Console Commands</h2>
+                </div>
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1rem; font-size: 0.85rem;">
+                    <div style="background: var(--bg-card); padding: 1rem; border-radius: 8px;">
+                        <b style="color: var(--accent);">Create Account:</b><br>
+                        <code>account create &lt;username&gt; [uid]</code>
+                    </div>
+                    <div style="background: var(--bg-card); padding: 1rem; border-radius: 8px;">
+                        <b style="color: var(--accent);">Heal All Characters:</b><br>
+                        <code>/heal</code>
+                    </div>
+                    <div style="background: var(--bg-card); padding: 1rem; border-radius: 8px;">
+                        <b style="color: var(--accent);">God Mode:</b><br>
+                        <code>/prop godmode on</code>
+                    </div>
+                    <div style="background: var(--bg-card); padding: 1rem; border-radius: 8px;">
+                        <b style="color: var(--accent);">Unlimited Energy:</b><br>
+                        <code>/prop ue on</code>
+                    </div>
+                    <div style="background: var(--bg-card); padding: 1rem; border-radius: 8px;">
+                        <b style="color: var(--accent);">Max Out Talents:</b><br>
+                        <code>/talent set all 10</code>
+                    </div>
+                    <div style="background: var(--bg-card); padding: 1rem; border-radius: 8px;">
+                        <b style="color: var(--accent);">Unlock Map Waypoints:</b><br>
+                        <code>/prop unlockmap 1</code>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Notification Toast -->
+    <div id="notification" class="notification"></div>
+
+    <footer>
+        LunaGC Server Management &bull; Connected to Grasscutter API &bull; Web GM Handbook
+    </footer>
+
+    <script>
+        // Store and load session from localStorage
+        function loadAuth() {
+            const uid = localStorage.getItem('lunagc_uid') || '';
+            const token = localStorage.getItem('lunagc_token') || '';
+            document.getElementById('playerUid').value = uid;
+            document.getElementById('playerToken').value = token;
+            updateStatus();
+        }
+
+        function saveAuth() {
+            const uid = document.getElementById('playerUid').value.trim();
+            const token = document.getElementById('playerToken').value.trim();
+            localStorage.setItem('lunagc_uid', uid);
+            localStorage.setItem('lunagc_token', token);
+            updateStatus();
+            notify('Player UID and Token saved locally.', 'success');
+        }
+
+        function updateStatus() {
+            const uid = document.getElementById('playerUid').value.trim();
+            const dot = document.getElementById('statusDot');
+            const text = document.getElementById('statusText');
+            const badge = document.getElementById('playerBadge');
+            const displayUid = document.getElementById('displayUid');
+
+            if (uid) {
+                dot.className = 'status-dot connected';
+                text.textContent = 'Player Configured';
+                badge.style.display = 'inline-block';
+                displayUid.textContent = uid;
+            } else {
+                dot.className = 'status-dot';
+                text.textContent = 'Disconnected (Set UID)';
+                badge.style.display = 'none';
+            }
+        }
+
+        function openAuthWindow() {
+            window.open('/handbook/authenticate', 'HandbookAuth', 'width=450,height=500');
+        }
+
+        window.addEventListener('message', (event) => {
+            if (event.data && event.data.type === 'handbook-auth') {
+                document.getElementById('playerUid').value = event.data.uid || '';
+                document.getElementById('playerToken').value = event.data.token || '';
+                saveAuth();
+                notify(`Authenticated Player UID: ${event.data.uid}`, 'success');
+            }
+        });
+
+        function switchTab(tabId, el) {
+            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+            document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+            el.classList.add('active');
+            document.getElementById(tabId).classList.add('active');
+        }
+
+        function notify(msg, type = 'info') {
+            const n = document.getElementById('notification');
+            n.textContent = msg;
+            n.style.borderLeftColor = type === 'success' ? 'var(--success)' : (type === 'error' ? 'var(--error)' : 'var(--accent)');
+            n.style.display = 'block';
+            setTimeout(() => { n.style.display = 'none'; }, 4000);
+        }
+
+        function getAuthPayload() {
+            const uid = document.getElementById('playerUid').value.trim();
+            const token = document.getElementById('playerToken').value.trim();
+            if (!uid) {
+                notify('Please enter your Player UID first!', 'error');
+                return null;
+            }
+            return { player: uid, playerToken: token };
+        }
+
+        async function postAction(url, body) {
+            try {
+                const res = await fetch(url, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(body)
+                });
+                const data = await res.json();
+                if (res.ok && data.status >= 200 && data.status < 300) {
+                    notify(data.message || 'Action executed successfully!', 'success');
+                } else {
+                    notify(data.message || `Error executing action (${data.status || res.status})`, 'error');
+                }
+            } catch (err) {
+                notify(`Network/Server Error: ${err.message}`, 'error');
+            }
+        }
+
+        function setItem(id, amt) {
+            document.getElementById('itemId').value = id;
+            document.getElementById('itemAmount').value = amt;
+        }
+
+        function setAvatar(id) {
+            document.getElementById('avatarId').value = id;
+        }
+
+        function setScene(id) {
+            document.getElementById('sceneId').value = id;
+        }
+
+        function giveItem() {
+            const auth = getAuthPayload();
+            if (!auth) return;
+            const item = document.getElementById('itemId').value;
+            const amount = parseInt(document.getElementById('itemAmount').value) || 1;
+            if (!item) return notify('Please enter an Item ID', 'error');
+            postAction('/handbook/item', { ...auth, item: item.toString(), amount });
+        }
+
+        function grantAvatar() {
+            const auth = getAuthPayload();
+            if (!auth) return;
+            const avatar = document.getElementById('avatarId').value;
+            const level = parseInt(document.getElementById('avatarLevel').value) || 90;
+            const constellations = parseInt(document.getElementById('avatarConst').value) || 6;
+            const talentLevels = parseInt(document.getElementById('avatarTalent').value) || 10;
+            if (!avatar) return notify('Please enter an Avatar ID', 'error');
+            postAction('/handbook/avatar', { ...auth, avatar: avatar.toString(), level, constellations, talentLevels });
+        }
+
+        function spawnEntity() {
+            const auth = getAuthPayload();
+            if (!auth) return;
+            const entity = document.getElementById('entityId').value;
+            const amount = parseInt(document.getElementById('spawnAmount').value) || 1;
+            const level = parseInt(document.getElementById('spawnLevel').value) || 90;
+            if (!entity) return notify('Please enter an Entity ID', 'error');
+            postAction('/handbook/spawn', { ...auth, entity: entity.toString(), amount, level });
+        }
+
+        function teleportTo() {
+            const auth = getAuthPayload();
+            if (!auth) return;
+            const scene = document.getElementById('sceneId').value;
+            if (!scene) return notify('Please enter a Scene ID', 'error');
+            postAction('/handbook/teleport', { ...auth, scene: scene.toString() });
+        }
+
+        // Initialize on page load
+        loadAuth();
+    </script>
+</body>
+</html>

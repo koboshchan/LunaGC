@@ -56,12 +56,13 @@ COPY docker-entrypoint.sh /usr/local/bin/docker-entrypoint.sh
 RUN chmod +x /usr/local/bin/docker-entrypoint.sh
 
 # Ports:
+# 8080/tcp  - Web UI Gateway
 # 8088/tcp  - HTTP Dispatch / SDK / Documentation Server
 # 22101/udp - Game Server KCP Protocol
 # 22101/tcp - Game Server TCP
 # 22102/tcp - Dispatch Region Server
 # 443/tcp   - HTTPS Gateway (if TLS enabled)
-EXPOSE 8088/tcp 22101/udp 22101/tcp 22102/tcp 443/tcp
+EXPOSE 8080/tcp 8088/tcp 22101/udp 22101/tcp 22102/tcp 443/tcp
 
 ENTRYPOINT ["docker-entrypoint.sh"]
 CMD ["java", "-jar", "LunaGC.jar"]
