@@ -1,0 +1,57 @@
+services:
+  mongodb:
+    image: mongo:6.0
+    container_name: lunagc-mongodb
+    restart: unless-stopped
+    # MongoDB configuration:
+    # 1. No authentication enabled (default open trust within private network)
+    # 2. No exposed ports to host machine (internal Docker DNS only)
+    volumes:
+      - mongo_data:/data/db
+    networks:
+      - lunagc-net
+    healthcheck:
+      test: ["CMD-SHELL", "echo 'db.runCommand(\"ping\").ok' | mongosh --quiet"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+      start_period: 5s
+
+  lunagc:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: runner
+    container_name: lunagc-server
+    restart: unless-stopped
+    depends_on:
+      mongodb:
+        condition: service_healthy
+    environment:
+      - MONGO_URI=mongodb://mongodb:27017
+      - MONGO_HOST=mongodb
+      - MONGO_PORT=27017
+      - JAVA_OPTS=-Xms1024M -Xmx4096M -XX:+UseG1GC
+      # Change ACCESS_ADDRESS to your public or LAN IP if clients connect remotely
+      - ACCESS_ADDRESS=127.0.0.1
+    ports:
+      - "8088:8088/tcp"     # HTTP Dispatch / SDK Server
+      - "22101:22101/udp"   # Game Server KCP Protocol
+      - "22101:22101/tcp"   # Game Server TCP Protocol
+    volumes:
+      - ./resources:/app/resources
+      - ./data:/app/data
+      - ./plugins:/app/plugins
+      - ./logs:/app/logs
+    stdin_open: true
+    tty: true
+    networks:
+      - lunagc-net
+
+networks:
+  lunagc-net:
+    driver: bridge
+
+volumes:
+  mongo_data:
+    driver: local

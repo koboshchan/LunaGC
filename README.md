@@ -14,37 +14,59 @@ Contribute if you want/can...
 # Read the [handbook](handbook.md)!
 
 # Setup Guide
-- Read it below, its just enough to get the server up and running along with the client.
 
-## Main Requirements
+### Method 1: One-Click Docker Startup (Recommended)
 
+Requires [Docker & Docker Compose](https://docs.docker.com/get-docker/). No need to install Java, MongoDB, or Gradle manually on your host machine.
+
+1. **Clone the repository with submodules**:
+   ```bash
+   git clone --recurse-submodules https://github.com/girluh/LunaGC.git
+   cd LunaGC
+   ```
+   *If you already cloned without `--recurse-submodules`, run:*
+   ```bash
+   git submodule update --init --recursive
+   ```
+
+2. **Start the server and database**:
+   ```bash
+   docker compose up -d --build
+   ```
+   - Automatically builds the Fat JAR using a multi-stage builder (`eclipse-temurin:17-jdk`).
+   - Starts an isolated MongoDB instance (no authentication, no exposed host ports, internal Docker DNS `mongodb:27017`).
+   - Mounts resources, data, plugins, and logs automatically.
+
+3. **Interact with the server console**:
+   ```bash
+   # View live logs
+   docker compose logs -f lunagc
+
+   # Attach to interactive command console (e.g. account create <username> <uid>)
+   docker attach lunagc-server
+   ```
+   *(Tip: Press `Ctrl + P`, then `Ctrl + Q` to detach without stopping the container)*
+
+4. **Stop the server**:
+   ```bash
+   docker compose down
+   ```
+
+---
+
+### Method 2: Manual Setup
+
+#### Main Requirements
 - Get [Java 17](https://www.oracle.com/java/technologies/javase/jdk17-archive-downloads.html)
 - Get [MongoDB Community Server](https://www.mongodb.com/try/download/community)
-- Get [NodeJS](https://nodejs.org/dist/v20.15.0/node-v20.15.0-x64.msi) (For handbook generation)
+- Get [NodeJS](https://nodejs.org/dist/v20.15.0/node-v20.15.0-x64.msi) (Optional, for handbook generation)
 - Get game version REL7.0.0
-- Make sure to install java and set the environment variables.
-- Build the server (refer to "Compile the actual server" in this guide.)
-- Download the [Resources](https://github.com/girluh/LunaGC-Resources), make a new folder called `resources` in the downloaded LunaGC folder and then extract the resources in that new folder.
-- Set useEncryption, Questing and useInRouting to false (it should be false by default, if not then change it)
+- Resources (included as submodule in `./resources` or downloaded from [LunaGC-Resources](https://github.com/girluh/LunaGC-Resources))
+- Set `useEncryption`, `questing`, and `useInRouting` to `false` (default)
 - [Patch the game](#patching-the-game)
 - Start the server and the game, make sure to also create an account in the LunaGC console!
-- Have fun (or don't)
 
-### Patching the game
-- Copy `patch/Astrolabe.dll` into the game folder at `GenshinImpact_Data/Plugins`. Back up the old `Astrolabe.dll` in the plugins folder first.
-
-### Getting started
-
-- Clone the repository (install [Git](https://git-scm.com) first )
-
-  ```
-  git clone --recurse-submodules https://github.com/girluh/LunaGC.git
-  ```
-
-- Now you can continue with the steps below.
-
-
-### Compile the actual Server
+#### Compile the actual Server
 
 **Requirements**:
 
@@ -59,7 +81,7 @@ Contribute if you want/can...
   .\gradlew.bat jar
   ```
 
-- **For Linux**:
+- **For Linux / macOS**:
 
   ```bash
   chmod +x gradlew
@@ -67,9 +89,9 @@ Contribute if you want/can...
   ./gradlew jar
   ```
 
-### You can find the output JAR in the project root folder.
+Output JAR can be found in the project root folder.
 
-### Manually compile the handbook
+#### Manually compile the handbook
 
 ```shell
 ./gradlew generateHandbook

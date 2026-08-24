@@ -4,3 +4,6 @@
 [submodule "src/handbook/data/assets"]
 	path = src/handbook/data/assets
 	url = https://github.com/genshitters/gm-handbook-assets.git
+[submodule "resources"]
+	path = resources
+	url = https://github.com/girluh/LunaGC-Resources.git
