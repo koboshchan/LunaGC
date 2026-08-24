@@ -14,8 +14,8 @@ RUN apt-get update && \
 COPY gradlew settings.gradle build.gradle ./
 COPY gradle/ ./gradle/
 
-# Ensure gradlew has execute permission and pre-download Gradle distribution
-RUN chmod +x gradlew && ./gradlew --version
+# Ensure gradlew has Linux line endings (LF) and execute permission
+RUN sed -i 's/\r$//' gradlew && chmod +x gradlew && ./gradlew --version
 
 # Copy dependencies, protocol buffers, and source code
 COPY lib/ ./lib/
@@ -53,7 +53,7 @@ COPY --from=builder /build/src/main/resources/logback.xml /app/src/main/resource
 
 # Copy entrypoint script
 COPY docker-entrypoint.sh /usr/local/bin/docker-entrypoint.sh
-RUN chmod +x /usr/local/bin/docker-entrypoint.sh
+RUN sed -i 's/\r$//' /usr/local/bin/docker-entrypoint.sh && chmod +x /usr/local/bin/docker-entrypoint.sh
 
 # Ports:
 # 8080/tcp  - Web UI Gateway
