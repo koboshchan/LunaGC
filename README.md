@@ -126,35 +126,7 @@ Before logging in, create an account using the server console:
 
 ---
 
-### Step 3: Redirect Game Traffic to Your Server
-
-Redirect client dispatch requests to your server (`http://127.0.0.1:8088`):
-
-#### Option A: Using a Launcher (Recommended)
-1. Open any Grasscutter-compatible launcher (e.g. Cultivation, Yuki, or GC-Launcher).
-2. Set the Server Address to:
-   ```text
-   http://127.0.0.1:8088
-   ```
-   *(If playing from another device on your LAN, replace `127.0.0.1` with your server host's local IP)*.
-3. Click **Launch Game**.
-
-#### Option B: Using Fiddler Classic
-1. In Fiddler, go to **Tools** > **Options** > **HTTPS** and enable **Decrypt HTTPS traffic**.
-2. Go to **Rules** > **Customize Rules...** and paste inside `OnBeforeRequest`:
-   ```javascript
-   if (oS.host.EndsWith(".yuanshen.com") || oS.host.EndsWith(".hoyoverse.com") || oS.host.EndsWith(".mihoyo.com")) {
-       if (!oS.host.Contains("autopatchcn") && !oS.host.Contains("autopatchos")) {
-           oS.host = "127.0.0.1:8088";
-           oS.fullUrl = oS.fullUrl.Replace("https://", "http://");
-       }
-   }
-   ```
-3. Keep Fiddler running in the background and start the game.
-
----
-
-### Step 4: Login & Play
+### Step 3: Login & Play
 
 1. At the in-game login screen:
    - **Username**: The `<username>` you created in Step 1 (e.g. `player1`).
