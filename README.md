@@ -21,7 +21,7 @@ Requires [Docker & Docker Compose](https://docs.docker.com/get-docker/). No need
 
 1. **Clone the repository with submodules**:
    ```bash
-   git clone --recurse-submodules https://github.com/girluh/LunaGC.git
+   git clone --recurse-submodules https://github.com/koboshchan/LunaGC.git
    cd LunaGC
    ```
    *If you already cloned without `--recurse-submodules`, run:*
