@@ -73,7 +73,7 @@ fi
 if [ ! -d "/app/resources/ExcelBinOutput" ] || [ -z "$(ls -A /app/resources/ExcelBinOutput 2>/dev/null)" ]; then
     echo "================================================================================"
     echo "[LunaGC] NOTE: Game resources are missing in '/app/resources'."
-    echo "[LunaGC] Please download resources from https://github.com/girluh/LunaGC-Resources"
+    echo "[LunaGC] Please download resources from https://github.com/koboshchan/LunaGC-Resources"
     echo "[LunaGC] and place them in the './resources' folder on your host machine."
     echo "================================================================================"
 fi

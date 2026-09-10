@@ -61,7 +61,7 @@ Requires [Docker & Docker Compose](https://docs.docker.com/get-docker/). No need
 - Get [MongoDB Community Server](https://www.mongodb.com/try/download/community)
 - Get [NodeJS](https://nodejs.org/dist/v20.15.0/node-v20.15.0-x64.msi) (Optional, for handbook generation)
 - Get game version REL7.0.0
-- Resources (included as submodule in `./resources` or downloaded from [LunaGC-Resources](https://github.com/girluh/LunaGC-Resources))
+- Resources (included as submodule in `./resources` or downloaded from [LunaGC-Resources](https://github.com/koboshchan/LunaGC-Resources))
 - Set `useEncryption`, `questing`, and `useInRouting` to `false` (default)
 - [Patch the game](#patching-the-game)
 - Start the server and the game, make sure to also create an account in the LunaGC console!

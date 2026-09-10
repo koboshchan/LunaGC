@@ -6,4 +6,4 @@
 	url = https://github.com/genshitters/gm-handbook-assets.git
 [submodule "resources"]
 	path = resources
-	url = https://github.com/girluh/LunaGC-Resources.git
+	url = https://github.com/koboshchan/LunaGC-Resources.git
