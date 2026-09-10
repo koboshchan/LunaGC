@@ -176,8 +176,8 @@ public final class DungeonSystem extends BaseGameSystem {
         player.getTowerManager().clearEntry();
         //Fix the issue where players cannot exit the dungeon
         if (dungeonManager != null) {
-        dungeonManager.setTowerDungeon(false);
-
+            dungeonManager.setTowerDungeon(false);
+        }
         // Transfer player back to world after a small delay.
         // This wait is important for avoiding double teleports,
         // which specifically happen when player quits a dungeon
