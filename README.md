@@ -1,21 +1,11 @@
-# LunaGC-7.0.0 WIP
-
-## Note from the maintainer
-Might update to latest occasionally, depends on how I'm feeling and my situation. Of course, I post the protocol buffer definitions on [GitLab](https://gitlab.com/kitkat-multiverse/genshin-protocol) and translations. Contact me at my [Discord](https://discord.gg/5Rfyjrt5aB)
-
-## Updated version of Grasscutters, with some new features implemented.
-Old Discord for LunaGC https://discord.gg/7D5gkyJR5Y (don't ask for support there as it's been taken over by other people (...), instead create an issue in this repository)
+# LunaGC for GI 7.0.0
 
 Features and functionality of the ps is not guaranteed, try it yourself to see what works and what doesnt.
 This is possibly the only public PS with updated mob and gadget spawns! (Up to Version 5.4)
 
 Contribute if you want/can...
 
-# Read the [handbook](handbook.md)!
-
 # Setup Guide
-
-### Method 1: One-Click Docker Startup (Recommended)
 
 Requires [Docker & Docker Compose](https://docs.docker.com/get-docker/). No need to install Java, MongoDB, or Gradle manually on your host machine.
 
@@ -51,53 +41,6 @@ Requires [Docker & Docker Compose](https://docs.docker.com/get-docker/). No need
    ```bash
    docker compose down
    ```
-
----
-
-### Method 2: Manual Setup
-
-#### Main Requirements
-- Get [Java 17](https://www.oracle.com/java/technologies/javase/jdk17-archive-downloads.html)
-- Get [MongoDB Community Server](https://www.mongodb.com/try/download/community)
-- Get [NodeJS](https://nodejs.org/dist/v20.15.0/node-v20.15.0-x64.msi) (Optional, for handbook generation)
-- Get game version REL7.0.0
-- Resources (included as submodule in `./resources` or downloaded from [LunaGC-Resources](https://github.com/koboshchan/LunaGC-Resources))
-- Set `useEncryption`, `questing`, and `useInRouting` to `false` (default)
-- [Patch the game](#patching-the-game)
-- Start the server and the game, make sure to also create an account in the LunaGC console!
-
-#### Compile the actual Server
-
-**Requirements**:
-
-[Java Development Kit 17 | JDK](https://oracle.com/java/technologies/javase/jdk17-archive-downloads.html) or higher
-
-- **Sidenote**: Handbook generation may fail on some systems. To disable handbook generation, append `-PskipHandbook=1` to the `gradlew jar` command.
-
-- **For Windows**:
-
-  ```shell
-  .\gradlew.bat
-  .\gradlew.bat jar
-  ```
-
-- **For Linux / macOS**:
-
-  ```bash
-  chmod +x gradlew
-  ./gradlew
-  ./gradlew jar
-  ```
-
-Output JAR can be found in the project root folder.
-
-#### Manually compile the handbook
-
-```shell
-./gradlew generateHandbook
-```
-
----
 
 ## Connecting to Your Game
 
@@ -147,11 +90,11 @@ Before logging in, create an account using the server console:
 
 ## Troubleshooting
 
-- Make sure to set useEncryption and useInRouting both to false otherwise you might encounter errors.
-- To use windy make sure that you put your luac files in C:\Windy (make the folder if it doesnt exist)
-- If you get an error related to MongoDB connection timeout, check if the mongodb service is running. On windows: Press windows key and r then type `services.msc`, look for mongodb server and if it's not started then start it by right clicking on it and start. On linux, you can do `systemctl status mongod` to see if it's running, if it isn't then type `systemctl start mongod`. However, if you get error 14 on linux change the owner of the mongodb folder and the .sock file (`sudo chown -R mongodb:mongodb /var/lib/mongodb` and `sudo chown mongodb:mongodb /tmp/mongodb-27017.sock` then try to start the service again.)
+- Make a issue.
 
 ## Credit
+
+original Project [LunaGC](https://github.com/girluh/LunaGC)
 
 proto Repository [hk4e-protos](https://gitlab.com/kitkat-multiverse/genshin-protocol)
 
