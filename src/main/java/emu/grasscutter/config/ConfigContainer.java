@@ -363,11 +363,11 @@ public class ConfigContainer {
 
     public static class JoinOptions {
         public int[] welcomeEmotes = {2007, 1002, 4010};
-        public String welcomeMessage = "Welcome to LunaGC 6.6.0";
+        public String welcomeMessage = "Welcome to LunaGC 7.0.0";
         public JoinOptions.Mail welcomeMail = new JoinOptions.Mail();
 
         public static class Mail {
-            public String title = "Welcome to LunaGC 6.6.0";
+            public String title = "Welcome to LunaGC 7.0.0";
             public String content = """
                     Hi there!\r\nWelcome to LunaGC!
                     """;
@@ -380,6 +380,8 @@ public class ConfigContainer {
     public static class ConsoleAccount {
         public int avatarId = 10000007;
         public int nameCardId = 210001;
+        public int profilePictureId = 0;
+        public int profileFrameId = 0;
         public int adventureRank = 1;
         public int worldLevel = 0;
 
